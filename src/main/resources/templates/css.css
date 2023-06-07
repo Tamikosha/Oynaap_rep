@@ -1,0 +1,6 @@
+:root {
+    --primary-color: red;
+}
+.my-custom-button {
+    background-color: red;
+}

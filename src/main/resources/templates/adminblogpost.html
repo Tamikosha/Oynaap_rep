@@ -37,7 +37,7 @@
           <a class="nav-link" href="/admin/category">Category</a>
         </li>
         <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
-          <a class="nav-link" href="/admin/product">Product</a>
+          <a class="nav-link" href="/admin/game">Product</a>
         </li>
         <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
           <a class="nav-link" href="/admin/blogpost">Post</a>
@@ -60,7 +60,7 @@
 
 
 <!-- Category -->
-<form method="POST" action = "/admin/blogpost">
+<form method="POST" action = "/admin/blogpost" enctype="multipart/form-data">
   <div class="container">
     <div class="row mt-5">
       <div class="col">

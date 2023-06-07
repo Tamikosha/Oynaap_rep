@@ -14,8 +14,8 @@
       }
       </style>
 </head>
-<body>
-<nav class="navbar navbar-expand-sm bg-light navbar-light">
+<body class="bg-dark">
+<nav class="navbar navbar-expand-sm bg-info navbar-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Oynaap</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -27,7 +27,7 @@
                     <a class="nav-link" href="/shop">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/news">News</a>
+                    <a class="nav-link" href="/blogpost">News</a>
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <a class="nav-link" href="/login">Login</a>
@@ -36,7 +36,7 @@
                     <a class="nav-link" href="/admin/category">Category</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/product">Product</a>
+                    <a class="nav-link" href="/admin/game">Product</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN')">
                     <a class="nav-link" href="/admin/blogpost">Post</a>
@@ -88,15 +88,15 @@
 <!-- end filters -->
 <div class="d-flex bd-highlight justify-content-center row">
 
-    <div class="bd-highlight col-12 col-lg-4 box" data-th-each="p: ${products}">
+    <div class="bd-highlight col-12 col-lg-4 box" data-th-each="p: ${games}">
         <div>
-          <a th:href="|/shop/product/${p.prod_id}|"><img data-th-src="|shop/image/${p.prod_id}|" width="375" height="575" alt=""></a>
+          <a th:href="|/shop/game/${p.gm_id}|"><img data-th-src="|shop/image/${p.gm_id}|" width="375" height="575" alt=""></a>
         </div>
         <div><p class="lead" data-th-text ="${p.name}"></p></div>
         <div><p class="lead" data-th-text ="'$' + ${p.price}"></p></div>
     </div>
   </div>
-<!--end products  -->
+<!--end games  -->
 
 <!-- Footer -->
  <footer class="row">
