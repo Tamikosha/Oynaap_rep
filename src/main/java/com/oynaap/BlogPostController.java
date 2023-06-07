@@ -3,27 +3,25 @@ package com.oynaap.controllers;
 import com.oynaap.models.BlogPost;
 import com.oynaap.models.Category;
 import com.oynaap.service.CategoryService;
-import com.oynaap.service.ProductService;
+import com.oynaap.service.GameAndBlogpostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.oynaap.repository.Queries.SQL_SELECT_CATEGORYID;
+import static com.oynaap.repository.SQLCOMMAND.SQL_SELECT_CATEGORYID;
+
 
 @Controller
 @RequestMapping
 public class BlogPostController {
     @Autowired
-    private ProductService blogpostSvc;
+    private GameAndBlogpostService blogpostSvc;
 
 
     @Autowired
@@ -37,7 +35,7 @@ public class BlogPostController {
     @GetMapping(path="/blogpost")
     public ModelAndView Blogpost() throws SQLException{
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("blogpost");
+        mvc.setViewName("blogpostblogpost");
         List<BlogPost> blogposts = blogpostSvc.getAllBlogPostImages();
         mvc.addObject("blogpost",blogposts);
         List<Category> categories = categorySvc.getAllCategories();
@@ -51,7 +49,7 @@ public class BlogPostController {
     public ModelAndView Search(
             @RequestParam String author, @RequestParam String category) throws SQLException{
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("blogpost");
+        mvc.setViewName("blogpostblogpost");
 
         if(category.equals("All")){
             System.out.println(">>>>>>  category1: " +category);
@@ -84,6 +82,7 @@ public class BlogPostController {
         return mvc;
 
     }
+
 
 
 }

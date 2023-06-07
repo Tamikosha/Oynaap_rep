@@ -1,7 +1,7 @@
 package com.oynaap.controllers;
 
 import com.oynaap.models.*;
-import com.oynaap.repository.Queries;
+import com.oynaap.repository.SQLCOMMAND;
 import com.oynaap.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,10 +22,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping
-public class ShopController implements Queries {
-    
+public class ShopController implements SQLCOMMAND {
+
     @Autowired
-    private ProductService productSvc;
+    private GameAndBlogpostService gameSvc;
 
     @Autowired
     private ShopService shopSvc;
@@ -48,8 +48,8 @@ public class ShopController implements Queries {
     public ModelAndView Shop() throws SQLException{
         ModelAndView mvc = new ModelAndView();
         mvc.setViewName("shop");
-        List<Product> products = productSvc.getAllProductImages();
-        mvc.addObject("products",products);
+        List<Game> games = gameSvc.getAllGameImages();
+        mvc.addObject("games", games);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
 
@@ -65,15 +65,15 @@ public class ShopController implements Queries {
 
             if(category.equals("All")){
                 System.out.println(">>>>>>  category1: " +category);
-                List<Product> products = productSvc.searchProductsByName(name);
-                mvc.addObject("products",products);
+                List<Game> games = gameSvc.searchGamesByName(name);
+                mvc.addObject("games", games);
             }else{
                 System.out.println(">>>>>> category2: " +category);
                 SqlRowSet rs = template.queryForRowSet(SQL_SELECT_CATEGORYID,category);
                 rs.next();
                 Integer category_id=rs.getInt("category_id");
-                List<Product> products = productSvc.searchProductsByNameAndCategory(name,category_id);
-                mvc.addObject("products",products);
+                List<Game> games = gameSvc.searchGamesByNameAndCategory(name,category_id);
+                mvc.addObject("games", games);
                 System.out.println(">>>>>> category2: " +category);
             }
 
@@ -83,13 +83,13 @@ public class ShopController implements Queries {
             return mvc;
     }
 
-    @GetMapping(path="/shop/product/{prod_id}")
-    public ModelAndView Product(@PathVariable(name="prod_id") Integer prod_id) throws SQLException{
+    @GetMapping(path="/shop/game/{gm_id}")
+    public ModelAndView Game(@PathVariable(name="gm_id") Integer gm_id) throws SQLException{
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("shopproduct");
-        Product product = productSvc.getOneProductImage(prod_id);
-        mvc.addObject("product",product);
-        System.out.println(">>>>>> prod_id: " +product.getProd_id());
+        mvc.setViewName("shopgame");
+        Game game = gameSvc.getOneGameImage(gm_id);
+        mvc.addObject("game", game);
+        System.out.println(">>>>>> gm_id: " + game.getGm_id());
         
         return mvc;
    
@@ -165,23 +165,23 @@ public class ShopController implements Queries {
     public ModelAndView addToCart(
         @RequestParam (name="status") String status,
         @RequestParam (name="quantity") Integer quantity,
-        @RequestParam (name="prod_id") Integer prod_id) throws SQLException{
+        @RequestParam (name="gm_id") Integer gm_id) throws SQLException{
 
             Cart cart = new Cart();
     
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String username = userDetails.getUsername();
 
-            Product product = productSvc.selectProduct(prod_id);
-            Double price = product.getPrice();
-            String prod_name = product.getName();
+            Game game = gameSvc.selectGame(gm_id);
+            Double price = game.getPrice();
+            String Game_name = game.getName();
 
             cart.setStatus(status);
             cart.setQuantity(quantity);
             cart.setUsername(username);
-            cart.setProd_id(prod_id);
+            cart.setGm_id(gm_id);
             cart.setPrice(price);
-            cart.setProd_name(prod_name);
+            cart.setGame_name(Game_name);
 
             cartSvc.addNewCartItem(cart);
 

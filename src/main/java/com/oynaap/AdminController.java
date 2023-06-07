@@ -2,9 +2,9 @@ package com.oynaap.controllers;
 
 import com.oynaap.models.BlogPost;
 import com.oynaap.models.Category;
-import com.oynaap.models.Product;
+import com.oynaap.models.Game;
 import com.oynaap.service.CategoryService;
-import com.oynaap.service.ProductService;
+import com.oynaap.service.GameAndBlogpostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -25,10 +25,10 @@ public class AdminController {
     private CategoryService categorySvc;
 
     @Autowired
-    private ProductService productSvc;
+    private GameAndBlogpostService gameSvc;
 
     @Autowired
-    private ProductService blogpostSvc;
+    private GameAndBlogpostService blogpostSvc;
 
     @GetMapping(path="/category")
     public ModelAndView getAdminCategory(){
@@ -105,22 +105,22 @@ public class AdminController {
         return mvc;
     }
 
-    @GetMapping(path="/product")
-    public ModelAndView getProducts() throws SQLException{
+    @GetMapping(path="/game")
+    public ModelAndView getGames() throws SQLException{
 
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("adminproduct");
-        List<Product> products = productSvc.getAllProducts();
-        System.out.println(">>>>>> products: " +products);
-        mvc.addObject("products",products);
+        mvc.setViewName("admingame");
+        List<Game> games = gameSvc.getAllGames();
+        System.out.println(">>>>>> games: " + games);
+        mvc.addObject("games", games);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
         
         return mvc;
     }
 
-    @PostMapping(path="/product",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ModelAndView addProduct(
+    @PostMapping(path="/game",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ModelAndView addGame(
         @RequestParam MultipartFile image,
         @RequestParam String name,
         @RequestParam String description,
@@ -135,61 +135,61 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        Product product = new Product();
-        product.setImage(buff);
-        product.setName(name);
-        product.setDescription(description);
-        product.setPrice(Double.parseDouble(price));
+        Game game = new Game();
+        game.setImage(buff);
+        game.setName(name);
+        game.setDescription(description);
+        game.setPrice(Double.parseDouble(price));
 
-        Integer categoryID = productSvc.selectCategoryID(category);
-        product.setCategory_id(categoryID);
+        Integer categoryID = gameSvc.selectCategoryID(category);
+        game.setCategory_id(categoryID);
 
-        productSvc.addNewProduct(product);
+        gameSvc.addNewGame(game);
 
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("adminproduct");
-        List<Product> products = productSvc.getAllProducts();
-        mvc.addObject("products",products);
+        mvc.setViewName("admingame");
+        List<Game> games = gameSvc.getAllGames();
+        mvc.addObject("games", games);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
 
         return mvc;
     }
 
-    @GetMapping(path="product/delete/{prod_id}")
-    public ModelAndView deleteProduct(@PathVariable(name="prod_id") Integer prod_id) throws SQLException{
+    @GetMapping(path="game/delete/{gm_id}")
+    public ModelAndView deleteGame(@PathVariable(name="gm_id") Integer gm_id) throws SQLException{
 
-        productSvc.deleteProduct(prod_id);
+        gameSvc.deleteGame(gm_id);
 
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("adminproduct");
-        List<Product> products = productSvc.getAllProducts();
-        mvc.addObject("products",products);
+        mvc.setViewName("admingame");
+        List<Game> games = gameSvc.getAllGames();
+        mvc.addObject("games", games);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
 
         return mvc;
     }
 
-    @GetMapping(path="product/edit/{prod_id}")
-    public ModelAndView editProduct(@PathVariable(name="prod_id") Integer prod_id) throws SQLException{
+    @GetMapping(path="game/edit/{gm_id}")
+    public ModelAndView editGame(@PathVariable(name="gm_id") Integer gm_id) throws SQLException{
 
-        Product product = productSvc.selectProduct(prod_id);
+        Game game = gameSvc.selectGame(gm_id);
 
-        String categoryName = productSvc.selectProductCategory(product.getCategory_id());
-        product.setCategory(categoryName);
+        String categoryName = gameSvc.selectGameCategory(game.getCategory_id());
+        game.setCategory(categoryName);
 
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("editproduct");
-        mvc.addObject("product",product);
+        mvc.setViewName("editgame");
+        mvc.addObject("game", game);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
 
         return mvc;
     }
 
-    @PostMapping(path="/product/updateproduct",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ModelAndView updateProduct(
+    @PostMapping(path="/game/updategame",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ModelAndView updateGame(
             @RequestParam MultipartFile image,
         @RequestParam String name,
         @RequestParam String description,
@@ -205,22 +205,22 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        Product product = new Product();
-        product.setImage(buff);
-        product.setName(name);
-        product.setDescription(description);
-        product.setPrice(Double.parseDouble(price));
-        product.setProd_id(Integer.parseInt(id));
+        Game game = new Game();
+        game.setImage(buff);
+        game.setName(name);
+        game.setDescription(description);
+        game.setPrice(Double.parseDouble(price));
+        game.setGm_id(Integer.parseInt(id));
 
-        Integer categoryID = productSvc.selectCategoryID(category);
-        product.setCategory_id(categoryID);
+        Integer categoryID = gameSvc.selectCategoryID(category);
+        game.setCategory_id(categoryID);
 
-        productSvc.updateProduct(product);
+        gameSvc.updateGame(game);
 
         ModelAndView mvc = new ModelAndView();
-        mvc.setViewName("adminproduct");
-        List<Product> products = productSvc.getAllProducts();
-        mvc.addObject("products",products);
+        mvc.setViewName("admingame");
+        List<Game> games = gameSvc.getAllGames();
+        mvc.addObject("games", games);
         List<Category> categories = categorySvc.getAllCategories();
         mvc.addObject("categories",categories);
 
@@ -240,10 +240,10 @@ public class AdminController {
         return mvc;
     }
 
-    @PostMapping(path="/blogpost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path="/blogpost",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ModelAndView addBlogPost(
             @RequestParam MultipartFile image,
-            @RequestParam String author    ,
+            @RequestParam String author,
             @RequestParam String description,
             @RequestParam String title,
             @RequestParam String category
